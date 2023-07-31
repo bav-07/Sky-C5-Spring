@@ -49,12 +49,13 @@ public class HedgehogController {
         return null;
     }
 
+    // @RequestParam works like @PathParam but it allows you to make certain parameters mandatory
     @PatchMapping("/update/{id}")
     public Hedgehog update(
             @PathVariable Integer id,
-            @PathParam("name") String name,
-            @PathParam("colour") String colour,
-            @PathParam("age") Integer age) {
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "colour", required = false) String colour,
+            @RequestParam(value = "age", required = false) Integer age) {
         System.out.println("ID: " + id);
         System.out.println("Name: " + name);
         System.out.println("Colour: " + colour);
