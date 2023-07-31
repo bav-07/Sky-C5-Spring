@@ -46,10 +46,9 @@ public class HedgehogController {
     }
 
     @GetMapping("/get/{id}")
-    public Hedgehog getById(@PathVariable Integer id) {
+    public Hedgehog getById(@PathVariable int id) {
         System.out.println("ID: " + id);
         Hedgehog toRemove = this.hedgehogs.get(id);
-        this.hedgehogs.remove(id.intValue());
         return toRemove;
     }
 
