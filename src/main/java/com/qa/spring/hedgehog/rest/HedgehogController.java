@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,33 +25,38 @@ public class HedgehogController {
     public ResponseEntity<Hedgehog> create(@RequestBody Hedgehog hedgehog) {
         System.out.println("RECEIVED: " + hedgehog);
         this.hedgehogs.add(hedgehog);
-        Hedgehog created= this.hedgehogs.get(this.hedgehogs.size() - 1);
+        Hedgehog created = this.hedgehogs.get(this.hedgehogs.size() - 1);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @PostMapping("/createMultiple")
-    public Hedgehog create(@RequestBody List<Hedgehog> newHedgehogs) {
-
+    public ResponseEntity<List<Hedgehog>> create(@RequestBody List<Hedgehog> newHedgehogs) {
         System.out.println("RECEIVED: " + newHedgehogs);
-        return null;
+        if (this.hedgehogs.addAll(newHedgehogs)) {
+            return new ResponseEntity<>(newHedgehogs, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
 
     @GetMapping("/getAll")
     public List<Hedgehog> getAll() {
-        return null;
+        return this.hedgehogs;
     }
 
     @GetMapping("/get/{id}")
     public Hedgehog getById(@PathVariable Integer id) {
         System.out.println("ID: " + id);
-        return null;
+        Hedgehog toRemove = this.hedgehogs.get(id);
+        this.hedgehogs.remove(id.intValue());
+        return toRemove;
     }
 
     // @RequestParam works like @PathParam but it allows you to make certain parameters mandatory
     @PatchMapping("/update/{id}")
     public Hedgehog update(
-            @PathVariable Integer id,
+            @PathVariable int id,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "colour", required = false) String colour,
             @RequestParam(value = "age", required = false) Integer age) {
@@ -60,13 +64,19 @@ public class HedgehogController {
         System.out.println("Name: " + name);
         System.out.println("Colour: " + colour);
         System.out.println("Age: " + age);
-
-        return null;
+        Hedgehog toUpdate = this.hedgehogs.get(id);
+        if (name != null)
+            toUpdate.setName(name);
+        if (colour != null)
+            toUpdate.setColour(colour);
+        if (age != null)
+            toUpdate.setAge(age);
+            return toUpdate;
     }
 
     @DeleteMapping("/remove/{id}")
-    public Hedgehog remove(@PathVariable Integer id) {
-        return null;
+    public Hedgehog remove(@PathVariable int id) {
+        return this.hedgehogs.remove(id);
     }
 
 }
