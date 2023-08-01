@@ -2,18 +2,22 @@ package com.qa.spring.hedgehog.rest;
 
 
 import com.qa.spring.hedgehog.domain.Hedgehog;
+import com.qa.spring.hedgehog.services.HedgehogService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/hedgehog")
 public class HedgehogController {
 
-    private List<Hedgehog> hedgehogs = new ArrayList<>();
+    private HedgehogService service;
+
+    public HedgehogController(HedgehogService service) {
+        this.service = service;
+    }
 
     @GetMapping("/hello")
     public String hello() {
@@ -23,16 +27,13 @@ public class HedgehogController {
 
     @PostMapping("/create")
     public ResponseEntity<Hedgehog> create(@RequestBody Hedgehog hedgehog) {
-        System.out.println("RECEIVED: " + hedgehog);
-        this.hedgehogs.add(hedgehog);
-        Hedgehog created = this.hedgehogs.get(this.hedgehogs.size() - 1);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        return new ResponseEntity<>(this.service.create(hedgehog), HttpStatus.CREATED);
     }
 
     @PostMapping("/createMultiple")
     public ResponseEntity<List<Hedgehog>> create(@RequestBody List<Hedgehog> newHedgehogs) {
         System.out.println("RECEIVED: " + newHedgehogs);
-        if (this.hedgehogs.addAll(newHedgehogs)) {
+        if (this.service.create(newHedgehogs) != null) {
             return new ResponseEntity<>(newHedgehogs, HttpStatus.CREATED);
         } else {
             return ResponseEntity.internalServerError().build();
@@ -42,40 +43,24 @@ public class HedgehogController {
 
     @GetMapping("/getAll")
     public List<Hedgehog> getAll() {
-        return this.hedgehogs;
+        return this.service.getAll();
     }
 
     @GetMapping("/get/{id}")
     public Hedgehog getById(@PathVariable int id) {
-        System.out.println("ID: " + id);
-        Hedgehog toRemove = this.hedgehogs.get(id);
-        return toRemove;
+        return this.service.getById(id);
     }
 
     // @RequestParam works like @PathParam but it allows you to make certain parameters mandatory
     @PatchMapping("/update/{id}")
-    public Hedgehog update(
-            @PathVariable int id,
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "colour", required = false) String colour,
-            @RequestParam(value = "age", required = false) Integer age) {
-        System.out.println("ID: " + id);
-        System.out.println("Name: " + name);
-        System.out.println("Colour: " + colour);
-        System.out.println("Age: " + age);
-        Hedgehog toUpdate = this.hedgehogs.get(id);
-        if (name != null)
-            toUpdate.setName(name);
-        if (colour != null)
-            toUpdate.setColour(colour);
-        if (age != null)
-            toUpdate.setAge(age);
-            return toUpdate;
+    public Hedgehog update(@PathVariable int id, @RequestParam(value = "name", required = false) String name, @RequestParam(value = "colour", required = false) String colour, @RequestParam(value = "age", required = false) Integer age) {
+        return this.service.update(id, name, colour, age);
+
     }
 
     @DeleteMapping("/remove/{id}")
     public Hedgehog remove(@PathVariable int id) {
-        return this.hedgehogs.remove(id);
+        return this.service.remove(id);
     }
 
 }
