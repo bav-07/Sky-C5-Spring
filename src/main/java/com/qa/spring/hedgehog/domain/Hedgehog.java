@@ -1,6 +1,14 @@
 package com.qa.spring.hedgehog.domain;
 
+import javax.persistence.*;
+
+@Entity
+//@Table used to set the name of table you create
 public class Hedgehog {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String name;
 
@@ -8,6 +16,12 @@ public class Hedgehog {
 
     private Integer age;
 
+    public Hedgehog(Integer id, String name, String colour, Integer age) {
+        this.id = id;
+        this.name = name;
+        this.colour = colour;
+        this.age = age;
+    }
 
     public Hedgehog(String name, String colour, Integer age) {
         this.name = name;
@@ -17,6 +31,14 @@ public class Hedgehog {
 
     // REQUIRED
     public Hedgehog() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
