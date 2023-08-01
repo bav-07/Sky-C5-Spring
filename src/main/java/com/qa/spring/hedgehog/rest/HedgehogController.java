@@ -3,7 +3,6 @@ package com.qa.spring.hedgehog.rest;
 
 import com.qa.spring.hedgehog.domain.Hedgehog;
 import com.qa.spring.hedgehog.services.HedgehogService;
-import com.qa.spring.hedgehog.services.HedgehogServiceList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,9 @@ public class HedgehogController {
 
     private HedgehogService service;
 
-
+    public HedgehogController(HedgehogService service) {
+        this.service = service;
+    }
 
     @GetMapping("/hello")
     public String hello() {
