@@ -1,6 +1,10 @@
 package com.qa.spring.hedgehog.domain;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 //@Table used to set the name of table you create
@@ -11,10 +15,12 @@ public class Hedgehog {
     private Integer id;
 
     @Column(unique = false, nullable = true)
+    @NotBlank
     private String name;
 
+    @Size(min = 1, max = 10)
     private String colour;
-
+    @Range(min = 1, max = 20)
     private Integer age;
 
     public Hedgehog(Integer id, String name, String colour, Integer age) {

@@ -1,12 +1,12 @@
 package com.qa.spring.hedgehog.services;
 
 import com.qa.spring.hedgehog.domain.Hedgehog;
+import com.qa.spring.hedgehog.exceptions.HedgehogNotFoundException;
 import com.qa.spring.hedgehog.repos.HedgehogRepo;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Primary
 @Service
@@ -35,8 +35,7 @@ public class HedgehogServiceDB implements HedgehogService {
 
     @Override
     public Hedgehog getById(int id) {
-        Optional<Hedgehog> optionalHedgehog = this.repo.findById(id);
-        Hedgehog actualHedgehog = optionalHedgehog.get();
+        Hedgehog actualHedgehog = this.repo.findById(id).orElseThrow(() -> new HedgehogNotFoundException());
 
         return actualHedgehog;
     }

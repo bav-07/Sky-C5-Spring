@@ -1,6 +1,7 @@
 package com.qa.spring.hedgehog.repos;
 
 import com.qa.spring.hedgehog.domain.Hedgehog;
+import org.hibernate.criterion.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
