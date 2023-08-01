@@ -63,4 +63,13 @@ public class HedgehogController {
         return this.service.remove(id);
     }
 
+    @GetMapping("/findByName/{name}")
+    public List<Hedgehog> findByName(@PathVariable String name) {
+        return this.service.findByName(name);
+    }
+
+    @GetMapping("/findAgeByName/{name}")
+    public Integer findAgeByName(@PathVariable String name) {
+        return this.service.findAgeByName(name);
+    }
 }

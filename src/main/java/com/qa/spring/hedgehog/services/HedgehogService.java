@@ -22,4 +22,7 @@ public interface HedgehogService {
 
     Hedgehog remove(int id);
 
+    List<Hedgehog> findByName(String name);
+
+    Integer findAgeByName(String name);
 }
