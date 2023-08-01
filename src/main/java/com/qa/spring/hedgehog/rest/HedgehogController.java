@@ -16,9 +16,7 @@ public class HedgehogController {
 
     private HedgehogService service;
 
-    public HedgehogController(HedgehogService service) {
-        this.service = service;
-    }
+
 
     @GetMapping("/hello")
     public String hello() {
