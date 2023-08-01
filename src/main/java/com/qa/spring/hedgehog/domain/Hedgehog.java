@@ -10,6 +10,7 @@ public class Hedgehog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = false, nullable = true)
     private String name;
 
     private String colour;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Primary
+//@Primary
 @Service
 public class HedgehogServiceList implements HedgehogService {
 
@@ -52,5 +52,19 @@ public class HedgehogServiceList implements HedgehogService {
     @Override
     public Hedgehog remove(int id) {
         return this.hedgehogs.remove(id);
+    }
+
+    @Override
+    public List<Hedgehog> findByName(String name) {
+        List<Hedgehog> found = new ArrayList<>();
+        for (Hedgehog h : this.hedgehogs) {
+            if (name.equals(h.getName())) found.add(h);
+        }
+        return found;
+    }
+
+    @Override
+    public Integer findAgeByName(String name) {
+        return null;
     }
 }
