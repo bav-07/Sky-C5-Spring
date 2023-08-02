@@ -4,6 +4,7 @@ import com.qa.spring.hedgehog.domain.Hedgehog;
 import com.qa.spring.hedgehog.exceptions.HedgehogNotFoundException;
 import com.qa.spring.hedgehog.repos.HedgehogRepo;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
