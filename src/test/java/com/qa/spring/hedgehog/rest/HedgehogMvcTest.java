@@ -7,14 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT) // loads the application context
 @AutoConfigureMockMvc // create a MockMVC bean
+@Sql(scripts = {"classpath:hedgehog-schema.sql", "classpath:hedgehog-data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class HedgehogMvcTest {
 
 
@@ -35,14 +40,14 @@ public class HedgehogMvcTest {
         System.out.println("DATA: " + sonic);
         String sonicJSON = this.mapper.writeValueAsString(sonic);
         System.out.println("JSON: " + sonicJSON);
-        RequestBuilder req = MockMvcRequestBuilders.post("/hedgehog/create").content(sonicJSON).contentType(MediaType.APPLICATION_JSON);
+        RequestBuilder req = post("/hedgehog/create").content(sonicJSON).contentType(MediaType.APPLICATION_JSON);
 
-        ResultMatcher checkStatus = MockMvcResultMatchers.status().isCreated();
-        Hedgehog responseBody = new Hedgehog(1, "Sonic", "blue", 15);
+        ResultMatcher checkStatus = status().isCreated();
+        Hedgehog responseBody = new Hedgehog(2, "Sonic", "blue", 15);
         System.out.println("DATA: " + responseBody);
         String responseBodyJSON = this.mapper.writeValueAsString(responseBody);
         System.out.println("JSON: " + responseBodyJSON);
-        ResultMatcher checkBody = MockMvcResultMatchers.content().json(responseBodyJSON);
+        ResultMatcher checkBody = content().json(responseBodyJSON);
 
         this.mvc.perform(req).andExpect(checkStatus).andExpect(checkBody);
     }
@@ -50,14 +55,22 @@ public class HedgehogMvcTest {
     @Test
     void testCreate2() throws Exception {
         String sonicJSON = this.mapper.writeValueAsString(new Hedgehog("Sonic", "blue", 15));
-        String responseBodyJSON = this.mapper.writeValueAsString(new Hedgehog(1, "Sonic", "blue", 15));
+        String responseBodyJSON = this.mapper.writeValueAsString(new Hedgehog(2, "Sonic", "blue", 15));
         this.mvc.perform(
-                MockMvcRequestBuilders.
                         post("/hedgehog/create")
-                        .content(sonicJSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.content().json(responseBodyJSON));
+                                .content(sonicJSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isCreated())
+                .andExpect(content().json(responseBodyJSON));
+    }
+
+    @Test
+    void testRead() throws Exception {
+        final int id = 1;
+        String responseBody = this.mapper.writeValueAsString(new Hedgehog(id, "Silver", "silver", 12));
+        this.mvc.perform(get("/hedgehog/get/" + id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(responseBody));
     }
 }
