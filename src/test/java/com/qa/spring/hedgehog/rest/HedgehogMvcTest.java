@@ -66,6 +66,9 @@ public class HedgehogMvcTest {
     }
 
     @Test
+    void testCreateMultiple(){}
+
+    @Test
     void testRead() throws Exception {
         final int id = 1;
         String responseBody = this.mapper.writeValueAsString(new Hedgehog(id, "Silver", "silver", 12));
@@ -73,4 +76,24 @@ public class HedgehogMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(responseBody));
     }
+
+    @Test
+    void testReadAll() {}
+
+    @Test
+    void testReadName() {};
+    @Test
+    void testUpdate() {}
+
+    @Test
+    void testDelete() {}
+
+    // Nice to have but not required:
+
+    @Test // try and GET an object that doesn't exist
+    void testNotFound(){}
+
+    @Test // try and create an object that doesn't pass validation and check that the error works
+    void testFailCreate() {};
+
 }
