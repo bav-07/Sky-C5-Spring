@@ -23,6 +23,7 @@ public class Hedgehog {
     @Range(min = 1, max = 20)
     private Integer age;
 
+
     public Hedgehog(Integer id, String name, String colour, Integer age) {
         this.id = id;
         this.name = name;
@@ -79,5 +80,28 @@ public class Hedgehog {
                 ", colour='" + colour + '\'' +
                 ", age=" + age +
                 '}';
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Hedgehog hedgehog = (Hedgehog) o;
+
+        if (!id.equals(hedgehog.id)) return false;
+        if (!name.equals(hedgehog.name)) return false;
+        if (!colour.equals(hedgehog.colour)) return false;
+        return age.equals(hedgehog.age);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + colour.hashCode();
+        result = 31 * result + age.hashCode();
+        return result;
     }
 }
