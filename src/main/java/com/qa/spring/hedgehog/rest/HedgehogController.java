@@ -22,7 +22,7 @@ public class HedgehogController {
 
     @GetMapping("/hello")
     public String hello() {
-        return "Hello, World";
+        return "yeah boiiiiiiii";
     }
 
 
